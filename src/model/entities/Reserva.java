@@ -1,8 +1,10 @@
-package model;
+package model.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import model.exceptions.DomainException;
 
 public class Reserva {
 	
@@ -14,6 +16,9 @@ public class Reserva {
 	
 	
 	public Reserva(Integer numeroDoQuarto, Date dataCheckIn, Date dataCheckOut) {
+		if(!dataCheckOut.after(dataCheckIn)){
+			throw new DomainException("Data de saída é maior que data de entrada.");
+		}
 		this.numeroDoQuarto = numeroDoQuarto;
 		this.dataCheckIn = dataCheckIn;
 		this.dataCheckOut = dataCheckOut;
@@ -40,16 +45,15 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
 	
-	public String alterarData(Date dataCheckIn, Date dataCheckOut) {
+	public void alterarData(Date dataCheckIn, Date dataCheckOut) {
 		Date dataAtual = new Date();
 		if(dataCheckIn.before(dataAtual) || dataCheckOut.before(dataAtual)) {
-			return "As datas de reserva para atualização devem ser apartir de hoje.";
+			throw new DomainException("As datas de reserva para atualização devem ser apartir de hoje.");
 		}else if(!dataCheckOut.after(dataCheckIn)){
-			return "Data de saída é maior que data de entrada.";
+			throw new DomainException("Data de saída é maior que data de entrada.");
 		}
 		this.dataCheckIn = dataCheckIn;
 		this.dataCheckOut = dataCheckOut;
-		return null;
 	}
 	
 	@Override

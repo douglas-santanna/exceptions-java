@@ -6,29 +6,25 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
-import model.Reserva;
+import model.entities.Reserva;
+import model.exceptions.DomainException;
 
 public class Program {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args){
 		
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
-		System.out.print("Quarto ");
-		int numeroDoQuarto = sc.nextInt();
-		
-		System.out.print("Data de entrada: ");
-		Date dataCheckIn = sdf.parse(sc.next());
-		
-		System.out.print("Data de saída: ");
-		Date dataCheckOut = sdf.parse(sc.next());
-		
-		if(!dataCheckOut.after(dataCheckIn)) {
-			System.out.println("Erro na reserva. Data de saída é maior que data de entrada.");
-		}else {
+		try {
+			System.out.print("Quarto ");
+			int numeroDoQuarto = sc.nextInt();
+			
+			System.out.print("Data de entrada: ");
+			Date dataCheckIn = sdf.parse(sc.next());
+			System.out.print("Data de saída: ");
+			Date dataCheckOut = sdf.parse(sc.next());
 			Reserva reserva = new Reserva(numeroDoQuarto, dataCheckIn, dataCheckOut);
 			System.out.println("Reserva: "+ reserva);
 			
@@ -38,14 +34,15 @@ public class Program {
 			dataCheckIn = sdf.parse(sc.next());
 			System.out.print("Data de saída: ");
 			dataCheckOut = sdf.parse(sc.next());
+			reserva.alterarData(dataCheckIn, dataCheckOut);
+			System.out.println("Reserva: "+ reserva);
 			
-			String erro = reserva.alterarData(dataCheckIn, dataCheckOut);
-			if(erro != null) {
-				System.out.println(erro);
-			}else {
-				System.out.println("Reserva: "+ reserva);
-			}
-			
+		}catch (ParseException e) {
+			System.out.println("Formato da data inválido");
+		}catch (DomainException e) {
+			System.out.println(e.getMessage());
+		}catch (RuntimeException e) {
+			System.out.println("Ocorreu algo inesperado, tente novamente por favor.");
 		}
 		
 		sc.close();
