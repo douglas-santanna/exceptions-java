@@ -39,13 +39,10 @@ public class Program {
 			System.out.print("Data de saída: ");
 			dataCheckOut = sdf.parse(sc.next());
 			
-			Date dataAtual = new Date();
-			if(dataCheckIn.before(dataAtual) || dataCheckOut.before(dataAtual)) {
-				System.out.println("As datas de reserva para atualização devem ser apartir de hoje.");
-			}else if(!dataCheckOut.after(dataCheckIn)){
-				System.out.println("Erro na reserva. Data de saída é maior que data de entrada.");
+			String erro = reserva.alterarData(dataCheckIn, dataCheckOut);
+			if(erro != null) {
+				System.out.println(erro);
 			}else {
-				reserva.alterarData(dataCheckIn, dataCheckOut);
 				System.out.println("Reserva: "+ reserva);
 			}
 			

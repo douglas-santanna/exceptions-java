@@ -40,9 +40,16 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
 	
-	public void alterarData(Date dataCheckIn, Date dataCheckOut) {
+	public String alterarData(Date dataCheckIn, Date dataCheckOut) {
+		Date dataAtual = new Date();
+		if(dataCheckIn.before(dataAtual) || dataCheckOut.before(dataAtual)) {
+			return "As datas de reserva para atualização devem ser apartir de hoje.";
+		}else if(!dataCheckOut.after(dataCheckIn)){
+			return "Data de saída é maior que data de entrada.";
+		}
 		this.dataCheckIn = dataCheckIn;
 		this.dataCheckOut = dataCheckOut;
+		return null;
 	}
 	
 	@Override
